@@ -33,6 +33,34 @@ document.addEventListener("DOMContentLoaded", () => {
   // Variável para armazenar o tamanho selecionado
   let selectedSize = 1024; // Tamanho padrão
 
+  // Make the updateQRCode function handle all options and expose it globally
+  window.updateQRCode = function (options = {}) {
+    // Handle size changes
+    if (options.size) {
+      selectedSize = options.size;
+      console.log(`QR Code size updated to: ${selectedSize}px`);
+    }
+
+    // Handle dot type changes
+    if (options.dotType) {
+      console.log(`QR Code dot type updated to: ${options.dotType}`);
+      qrCode.update({
+        dotsOptions: {
+          type: options.dotType,
+        },
+      });
+    }
+
+    // Handle colorSvg option
+    if (options.colorSvg !== undefined) {
+      console.log(`Color SVG option updated to: ${options.colorSvg}`);
+      // Add your logic to handle the colorSvg option
+    }
+
+    // Regenerate QR code with updated settings
+    generateQRCode();
+  };
+
   // Adiciona o QR Code gerado no div
   qrCode.append(document.getElementById("qrcode"));
 
@@ -151,6 +179,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Configurar os botões de tamanho
+  // Remove or comment out the old size button event listeners
+  /*
   document.getElementById("size-512").addEventListener("click", (e) => {
     e.preventDefault();
     selectedSize = 512;
@@ -168,16 +198,35 @@ document.addEventListener("DOMContentLoaded", () => {
     selectedSize = 2560;
     updateSelectedSizeButton();
   });
+  */
 
-  // Função para atualizar a aparência do botão selecionado
+  // Add a new function to handle size changes from Starwind tabs
+  function updateQRCode(options = {}) {
+    if (options.size) {
+      selectedSize = options.size;
+    }
+
+    // Rest of your updateQRCode logic
+    // ...
+
+    // Update QR code with new settings
+    generateQRCode();
+  }
+
+  // If you had an updateSelectedSizeButton function, modify it to work with Starwind tabs
   function updateSelectedSizeButton() {
-    // Remover classe ativa de todos os botões
-    document.querySelectorAll(".size-btn").forEach((btn) => {
-      btn.classList.remove("active");
-    });
+    // Get all tab triggers
+    const tabTriggers = document.querySelectorAll("[data-tabs-trigger]");
 
-    // Adicionar classe ativa ao botão selecionado
-    document.getElementById(`size-${selectedSize}`).classList.add("active");
+    // Update the active state based on the selected size
+    tabTriggers.forEach((trigger) => {
+      const size = trigger.getAttribute("data-size");
+      if (size && parseInt(size) === selectedSize) {
+        // The Starwind tabs component will handle the active state automatically
+        // This is just in case you need additional custom styling
+        trigger.setAttribute("data-state", "active");
+      }
+    });
   }
 
   // Inicializar o botão de tamanho padrão como ativo
@@ -410,4 +459,164 @@ document.addEventListener("DOMContentLoaded", () => {
       return null;
     }
   }
+
+  // Adicionar evento para copiar SVG para a área de transferência
+  document.getElementById("copy-svg").addEventListener("click", () => {
+    // Criar um novo QR Code temporário com o tamanho selecionado
+    const tempQR = new QRCodeStyling({
+      ...qrCode._options,
+      width: selectedSize,
+      height: selectedSize,
+    });
+
+    // Obter os dados do QR Code temporário
+    tempQR.getRawData("svg").then((svgBlob) => {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        let svgString = e.target.result;
+
+        // Se houver um logo, garantir que ele esteja incorporado no SVG
+        if (qrCode._options.image && currentLogoFile && originalSvgContent) {
+          // Se o logo for SVG, incorporar diretamente o código SVG
+          if (currentLogoFile.type === "image/svg+xml") {
+            // Extrair informações da imagem existente para posicionamento
+            const imageMatch = svgString.match(/<image[^>]*>/);
+            if (imageMatch) {
+              const imageTag = imageMatch[0];
+              const xMatch = imageTag.match(/x="([^"]*)"/);
+              const yMatch = imageTag.match(/y="([^"]*)"/);
+              const widthMatch = imageTag.match(/width="([^"]*)"/);
+              const heightMatch = imageTag.match(/height="([^"]*)"/);
+
+              // Extrair valores de posição e tamanho
+              const x = xMatch ? xMatch[1] : "0";
+              const y = yMatch ? yMatch[1] : "0";
+              const width = widthMatch ? widthMatch[1] : "0";
+              const height = heightMatch ? heightMatch[1] : "0";
+
+              // Criar um parser de DOM para manipular o SVG do logo
+              const parser = new DOMParser();
+              const logoSvgDoc = parser.parseFromString(
+                originalSvgContent,
+                "image/svg+xml"
+              );
+
+              // Obter o elemento SVG raiz do logo
+              const logoSvgRoot = logoSvgDoc.querySelector("svg");
+
+              // Aplicar a cor principal se o checkbox estiver marcado
+              if (getElement("color-svg") && getElement("color-svg").checked) {
+                const mainColor = getElement("color")?.value || "#111111";
+                const elements = logoSvgDoc.querySelectorAll(
+                  "path, circle, rect, ellipse, line, polyline, polygon"
+                );
+
+                elements.forEach((el) => {
+                  el.removeAttribute("fill");
+                  el.removeAttribute("stroke");
+                  el.setAttribute("fill", mainColor);
+                });
+              }
+
+              // Extrair o conteúdo interno do SVG do logo (sem a tag svg externa)
+              const logoContent = logoSvgRoot.innerHTML;
+
+              // Criar um grupo SVG para o logo com posicionamento e escala corretos
+              const logoGroup = `<g transform="translate(${x}, ${y})" width="${width}" height="${height}">
+                <g transform="scale(${
+                  parseFloat(width) /
+                  parseFloat(
+                    logoSvgRoot.getAttribute("viewBox").split(" ")[2] || 100
+                  )
+                })">
+                  ${logoContent}
+                </g>
+              </g>`;
+
+              // Remover a tag de imagem existente e substituir pelo grupo SVG do logo
+              svgString = svgString.replace(/<image[^>]*\/>/, logoGroup);
+            }
+
+            // Copiar o SVG modificado para a área de transferência
+            copyToClipboard(svgString);
+          } else {
+            // Para imagens não-SVG, usar a abordagem de data URL
+            const logoReader = new FileReader();
+            logoReader.onload = function (logoEvent) {
+              const logoDataUrl = logoEvent.target.result;
+
+              // Substituir o href da imagem existente pelo data URL do logo
+              svgString = svgString.replace(
+                /<image[^>]*href="[^"]*"/,
+                `<image href="${logoDataUrl}"`
+              );
+
+              copyToClipboard(svgString);
+            };
+            logoReader.readAsDataURL(currentLogoFile);
+          }
+        } else {
+          // Se não houver logo, copiar o SVG normal
+          copyToClipboard(svgString);
+        }
+      };
+      reader.readAsText(svgBlob);
+    });
+
+    // Função auxiliar para copiar para a área de transferência
+    function copyToClipboard(svgContent) {
+      // Criar blob do SVG modificado para mostrar o tamanho
+      const svgBlob = new Blob([svgContent], { type: "image/svg+xml" });
+      const fileSizeKB = (svgBlob.size / 1024).toFixed(2);
+      const fileSizeMB = (svgBlob.size / (1024 * 1024)).toFixed(2);
+
+      // Criar elemento para mostrar o tamanho (se não existir)
+      let sizeInfo = document.getElementById("size-info");
+      if (!sizeInfo) {
+        sizeInfo = document.createElement("div");
+        sizeInfo.id = "size-info";
+        sizeInfo.className = "size-info";
+        document
+          .querySelector(".buttons")
+          .insertAdjacentElement("beforebegin", sizeInfo);
+      }
+
+      // Atualizar informação de tamanho
+      sizeInfo.innerHTML = `
+        <p>Tamanho do arquivo SVG: ${fileSizeKB} KB (${fileSizeMB} MB)</p>
+        <p>Dimensões: ${selectedSize} x ${selectedSize} pixels</p>
+      `;
+
+      // Copiar para a área de transferência
+      navigator.clipboard
+        .writeText(svgContent)
+        .then(() => {
+          // Feedback visual de sucesso
+          const copyButton = document.getElementById("copy-svg");
+          const originalText = copyButton.textContent;
+          copyButton.textContent = "Copiado!";
+          copyButton.classList.add("success");
+
+          // Restaurar o texto original após 2 segundos
+          setTimeout(() => {
+            copyButton.textContent = originalText;
+            copyButton.classList.remove("success");
+          }, 2000);
+        })
+        .catch((err) => {
+          console.error("Erro ao copiar: ", err);
+
+          // Feedback visual de erro
+          const copyButton = document.getElementById("copy-svg");
+          copyButton.textContent = "Erro ao copiar";
+          copyButton.classList.add("error");
+
+          // Restaurar o texto original após 2 segundos
+          setTimeout(() => {
+            copyButton.textContent = "Copiar SVG";
+            copyButton.classList.remove("error");
+          }, 2000);
+        });
+    }
+  });
 });

@@ -1,5 +1,13 @@
 ---
 import '../styles/global.css';
+import "../styles/starwind.css";
+import { Input } from "../components/starwind/input";
+import { Label } from "../components/starwind/label";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../components/starwind/select";
+import { Checkbox } from "../components/starwind/checkbox";
+import { Button } from "../components/starwind/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/starwind/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/starwind/tabs";
 ---
 
 <html lang="pt-BR">
@@ -7,66 +15,197 @@ import '../styles/global.css';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#0095f6" />
-    <title>Gerador de QR Code com Estilo</title>
+    <title>Gerador de QR Code</title>
     <script type="module" src="/qrcode-script.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <link type="image/svg+xml" rel="icon" href="/favicon.svg" />
   </head>
   <body>
-    <div class="container">
-      <h1>Gerador de QR Code com Estilo</h1>
-      <form id="qr-form">
-        <label for="link">Link do QR Code:</label>
-        <input type="text" id="link" placeholder="https://seulink.com" required />
+    <Card class="container">
+      <CardHeader>
+        <CardTitle>Gerador de QR Code</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form id="qr-form">
+          <div class="form-group">
+            <Label for="link">Link do QR Code:</Label>
+            <Input type="text" id="link" placeholder="https://seulink.com" required />
+          </div>
 
-        <label>Cores do QR Code:</label>
-        <div class="color-inputs">
-          <div class="color-input-group">
-            <label for="color">Cor principal:</label>
-            <input type="color" id="color" value="#111111" />
+          <div class="form-group">
+            <Label>Cores do QR Code:</Label>
+            <div class="color-inputs">
+              <div class="color-input-group">
+                <Label for="color">Cor principal:</Label>
+                <Input type="color" id="color" value="#111111" />
+              </div>
+              <div class="color-input-group">
+                <Label for="bg-color">Cor de fundo:</Label>
+                <Input type="color" id="bg-color" value="#ffffff" />
+              </div>
+            </div>
           </div>
-          <div class="color-input-group">
-            <label for="bg-color">Cor de fundo:</label>
-            <input type="color" id="bg-color" value="#ffffff" />
+
+          <div class="form-group">
+            <Label for="dot-type">Tipo de QR Code:</Label>
+            <Select name="dot-type" id="dot-type">
+              <SelectTrigger class="starwind-select-trigger w-full">
+                <SelectValue class="starwind-select-value" placeholder="Selecione um tipo" />
+              </SelectTrigger>
+              <SelectContent class="starwind-select-content">
+                <SelectItem class="starwind-select-item" value="square" data-value="square">Quadrado</SelectItem>
+                <SelectItem class="starwind-select-item" value="rounded" data-value="rounded">Arredondado</SelectItem>
+                <SelectItem class="starwind-select-item" value="dots" data-value="dots">Pontos</SelectItem>
+                <SelectItem class="starwind-select-item" value="classy" data-value="classy">Clássico</SelectItem>
+                <SelectItem class="starwind-select-item" value="classy-rounded" data-value="classy-rounded">Clássico Arredondado</SelectItem>
+                <SelectItem class="starwind-select-item" value="extra-rounded" data-value="extra-rounded">Extra Arredondado</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
+
+          <div class="form-group">
+            <Label for="logo">Logo no centro (opcional):</Label>
+            <Input type="file" id="logo" accept="image/*" />
+          </div>
+          
+          <div class="form-group">
+            <Checkbox id="color-svg" label="Colorir SVG com a cor principal" checked>
+            </Checkbox>
+          </div>
+        </form>
+
+        <!-- Área de visualização do QR Code -->
+        <div class="qrcode-preview">
+          <div id="qrcode"></div>
         </div>
 
-        <label for="dot-type">Tipo de QR Code:</label>
-        <select id="dot-type">
-          <option value="square">Quadrado</option>
-          <option value="rounded">Arredondado</option>
-          <option value="dots">Pontos</option>
-          <option value="classy">Clássico</option>
-          <option value="classy-rounded">Clássico Arredondado</option>
-          <option value="extra-rounded">Extra Arredondado</option>
-        </select>
+        <Tabs defaultValue="1024" id="size-tabs" syncKey="qr-size">
+          <TabsList className="size-tabs-list">
+            <TabsTrigger value="512">512px</TabsTrigger>
+            <TabsTrigger value="1024">1024px</TabsTrigger>
+            <TabsTrigger value="2560">2560px</TabsTrigger>
+          </TabsList>
+          <TabsContent value="512">
+            <div class="hidden"><!-- Hidden content for 512px --></div>
+          </TabsContent>
+          <TabsContent value="1024">
+            <div class="hidden"><!-- Hidden content for 1024px --></div>
+          </TabsContent>
+          <TabsContent value="2560">
+            <div class="hidden"><!-- Hidden content for 2560px --></div>
+          </TabsContent>
+        </Tabs>
 
-        <label for="logo">Logo no centro (opcional):</label>
-        <input type="file" id="logo" accept="image/*" />
-        <div class="checkbox-option">
-          <input type="checkbox" id="color-svg" checked />
-          <label for="color-svg">Colorir SVG com a cor principal</label>
+        <div class="buttons">
+          <Button id="download-png" variant="default">Baixar PNG</Button>
+          <Button id="download-svg" variant="outline">Baixar SVG</Button>
+          <Button id="copy-svg" variant="ghost">Copiar SVG</Button>
         </div>
-      </form>
+      </CardContent>
+    </Card>
 
-      <!-- Área de visualização do QR Code -->
-      <div class="qrcode-preview">
-        <div id="qrcode"></div>
-      </div>
-
-      <div class="size-buttons">
-        <button id="size-512" class="size-btn">512px</button>
-        <button id="size-1024" class="size-btn">1024px</button>
-        <button id="size-2560" class="size-btn">2560px</button>
-      </div>
-
-      <div class="buttons">
-        <button id="download-png" class="btn">Baixar PNG</button>
-        <button id="download-svg" class="btn">Baixar SVG</button>
-        <button id="copy-svg" class="btn">Copiar SVG</button>
-      </div>
-    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        console.log("DOM loaded, setting up tab listeners");
+        
+        // Add a syncKey to the Tabs component to enable event-based sync
+        const sizeTabs = document.getElementById('size-tabs');
+        if (sizeTabs) {
+          sizeTabs.dataset.syncKey = 'qr-size';
+          
+          // Listen for tab changes using the Starwind tabs event system
+          document.addEventListener('starwind-tabs-sync:qr-size', (e) => {
+            console.log("Tab changed:", e.detail.value);
+            const size = parseInt(e.detail.value);
+            if (!isNaN(size) && typeof window.updateQRCode === 'function') {
+              console.log("Updating QR code size to:", size);
+              window.updateQRCode({ size });
+            } else {
+              console.error("updateQRCode not available or size is not a number");
+            }
+          });
+          
+          // Also manually handle clicks on tab triggers as a fallback
+          const tabTriggers = sizeTabs.querySelectorAll('[data-tabs-trigger]');
+          tabTriggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+              const value = trigger.getAttribute('value');
+              console.log("Tab clicked:", value);
+              if (value && typeof window.updateQRCode === 'function') {
+                const size = parseInt(value);
+                if (!isNaN(size)) {
+                  console.log("Manually updating QR code size to:", size);
+                  window.updateQRCode({ size });
+                }
+              }
+            });
+          });
+        }
+        
+        // Check if updateQRCode is available
+        if (typeof window.updateQRCode !== 'function') {
+          console.error("updateQRCode function is not available");
+        }
+      });
+    </script>
+    <script>
+      // Add event listener for the checkbox
+      document.addEventListener('DOMContentLoaded', () => {
+        const colorSvgCheckbox = document.getElementById('color-svg');
+        if (colorSvgCheckbox) {
+          colorSvgCheckbox.addEventListener('change', (e) => {
+            // Handle checkbox change
+            const colorSvg = e.target.checked;
+            // Update QR code if needed
+            if (window.updateQRCode) {
+              window.updateQRCode({ colorSvg });
+            }
+          });
+        }
+      });
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Handle Select component for dot-type
+        const dotTypeSelect = document.getElementById('dot-type');
+        if (dotTypeSelect) {
+          // The actual select element is inside the component
+          const selectTrigger = dotTypeSelect.querySelector('.starwind-select-trigger');
+          const selectValue = dotTypeSelect.querySelector('.starwind-select-value');
+          const selectContent = dotTypeSelect.querySelector('.starwind-select-content');
+          
+          // Listen for changes on the select items
+          const selectItems = dotTypeSelect.querySelectorAll('.starwind-select-item');
+          selectItems.forEach(item => {
+            item.addEventListener('click', () => {
+              const value = item.getAttribute('data-value');
+              if (value && window.updateQRCode) {
+                window.updateQRCode({ dotType: value });
+              }
+            });
+          });
+        }
+      });
+    </script>
   </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

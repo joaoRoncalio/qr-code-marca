@@ -1,48 +1,66 @@
-# Astro Starter Kit: Basics
+# 🔄 QR Code Generator
 
-```sh
-pnpm create astro@latest -- --template basics
-```
+Um gerador de QR Code moderno e personalizável com recursos avançados de estilização e exportação.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+![QR Code Generator Preview](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## ✨ Recursos
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+- 🎨 **Personalização completa**: Cores, bordas, logos e muito mais
+- 🖼️ **Suporte a logos**: Adicione sua marca ou imagem ao centro do QR Code
+- 📱 **Responsivo**: Funciona em qualquer dispositivo
+- 📤 **Múltiplos formatos**: Exporte como SVG ou PNG
+- 📋 **Copiar para área de transferência**: Copie o código SVG diretamente
+- 🔍 **Pré-visualização em tempo real**: Veja as alterações instantaneamente
 
-## 🚀 Project Structure
+## 🚀 Como usar
 
-Inside of your Astro project, you'll see the following folders and files:
+1. Digite o URL ou texto que deseja codificar
+2. Personalize o design do QR Code conforme desejado
+3. Baixe ou copie o resultado
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+## 🛠️ Tecnologias
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+- [Astro](https://astro.build) - Framework web rápido e moderno
+- [QRCode Styling](https://github.com/kozakdenys/qr-code-styling) - Biblioteca de estilização de QR Code
+- JavaScript puro para manipulação do DOM e interatividade
 
-## 🧞 Commands
+## 🧞 Comandos
 
-All commands are run from the root of the project, from a terminal:
+Todos os comandos são executados a partir da raiz do projeto, em um terminal:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+| Comando                | Ação                                           |
+| :--------------------- | :--------------------------------------------- |
+| `pnpm install`         | Instala as dependências                        |
+| `pnpm dev`             | Inicia servidor local em `localhost:4321`      |
+| `pnpm build`           | Compila o site para produção em `./dist/`      |
+| `pnpm preview`         | Visualiza a compilação localmente              |
+| `pnpm astro ...`       | Executa comandos CLI como `astro add`, `check` |
+| `pnpm astro -- --help` | Obtém ajuda sobre o CLI do Astro               |
 
-## 👀 Want to learn more?
+## 📝 Licença
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Este projeto está licenciado sob a [MIT License](LICENSE)
+
+## 👥 Contribuição
+
+Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
+
+1. Faça um fork do projeto
+2. Crie sua branch de recurso (`git checkout -b feature/amazing-feature`)
+3. Commit suas alterações (`git commit -m 'Add some amazing feature'`)
+4. Push para a branch (`git push origin feature/amazing-feature`)
+5. Abra um Pull Request
+
+## 🔮 Próximos passos
+
+- [ ] Implementar mais opções de estilo (gradientes, padrões)
+- [ ] Melhorar a acessibilidade
+
+## 📞 Contato
+
+Se você tiver alguma dúvida ou sugestão, entre em contato através de [contato@montefiorestudio.com](mailto:contato@montefiorestudio.com)
+
+---
+
+Desenvolvido com ❤️ usando [Astro](https://astro.build)
