@@ -1,11 +1,35 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import '../styles/global.css';
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gerador de QR Code com Estilo</title>
+    <script type="module" src="/qrcode-script.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Gerador de QR Code com Estilo</h1>
+      <form id="qr-form">
+        <label for="link">Link do QR Code:</label>
+        <input type="text" id="link" placeholder="https://seulink.com" required />
+
+        <label for="color">Cor principal:</label>
+        <input type="color" id="color" value="#111111" />
+
+        <label for="logo">Logo no centro (opcional):</label>
+        <input type="file" id="logo" accept="image/*" />
+      </form>
+
+      <div id="qrcode" class="qrcode-preview"></div>
+
+      <div class="buttons">
+        <button id="download-png" class="btn">Baixar PNG</button>
+        <button id="download-svg" class="btn">Baixar SVG</button>
+      </div>
+    </div>
+  </body>
+</html>
