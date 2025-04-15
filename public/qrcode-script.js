@@ -33,6 +33,34 @@ document.addEventListener("DOMContentLoaded", () => {
   // Variável para armazenar o tamanho selecionado
   let selectedSize = 1024; // Tamanho padrão
 
+  // Make the updateQRCode function handle all options and expose it globally
+  window.updateQRCode = function (options = {}) {
+    // Handle size changes
+    if (options.size) {
+      selectedSize = options.size;
+      console.log(`QR Code size updated to: ${selectedSize}px`);
+    }
+
+    // Handle dot type changes
+    if (options.dotType) {
+      console.log(`QR Code dot type updated to: ${options.dotType}`);
+      qrCode.update({
+        dotsOptions: {
+          type: options.dotType,
+        },
+      });
+    }
+
+    // Handle colorSvg option
+    if (options.colorSvg !== undefined) {
+      console.log(`Color SVG option updated to: ${options.colorSvg}`);
+      // Add your logic to handle the colorSvg option
+    }
+
+    // Regenerate QR code with updated settings
+    generateQRCode();
+  };
+
   // Adiciona o QR Code gerado no div
   qrCode.append(document.getElementById("qrcode"));
 
@@ -151,6 +179,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Configurar os botões de tamanho
+  // Remove or comment out the old size button event listeners
+  /*
   document.getElementById("size-512").addEventListener("click", (e) => {
     e.preventDefault();
     selectedSize = 512;
@@ -168,16 +198,35 @@ document.addEventListener("DOMContentLoaded", () => {
     selectedSize = 2560;
     updateSelectedSizeButton();
   });
+  */
 
-  // Função para atualizar a aparência do botão selecionado
+  // Add a new function to handle size changes from Starwind tabs
+  function updateQRCode(options = {}) {
+    if (options.size) {
+      selectedSize = options.size;
+    }
+
+    // Rest of your updateQRCode logic
+    // ...
+
+    // Update QR code with new settings
+    generateQRCode();
+  }
+
+  // If you had an updateSelectedSizeButton function, modify it to work with Starwind tabs
   function updateSelectedSizeButton() {
-    // Remover classe ativa de todos os botões
-    document.querySelectorAll(".size-btn").forEach((btn) => {
-      btn.classList.remove("active");
-    });
+    // Get all tab triggers
+    const tabTriggers = document.querySelectorAll("[data-tabs-trigger]");
 
-    // Adicionar classe ativa ao botão selecionado
-    document.getElementById(`size-${selectedSize}`).classList.add("active");
+    // Update the active state based on the selected size
+    tabTriggers.forEach((trigger) => {
+      const size = trigger.getAttribute("data-size");
+      if (size && parseInt(size) === selectedSize) {
+        // The Starwind tabs component will handle the active state automatically
+        // This is just in case you need additional custom styling
+        trigger.setAttribute("data-state", "active");
+      }
+    });
   }
 
   // Inicializar o botão de tamanho padrão como ativo

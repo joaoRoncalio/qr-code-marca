@@ -22,6 +22,18 @@
     {
       "name": "checkbox",
       "version": "1.2.0"
+    },
+    {
+      "name": "button",
+      "version": "2.0.1"
+    },
+    {
+      "name": "card",
+      "version": "1.1.0"
+    },
+    {
+      "name": "tabs",
+      "version": "1.1.1"
     }
   ]
 }
