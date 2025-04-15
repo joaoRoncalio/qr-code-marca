@@ -5,7 +5,8 @@ import '../styles/global.css';
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0095f6" />
     <title>Gerador de QR Code com Estilo</title>
     <script type="module" src="/qrcode-script.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
@@ -17,19 +18,59 @@ import '../styles/global.css';
         <label for="link">Link do QR Code:</label>
         <input type="text" id="link" placeholder="https://seulink.com" required />
 
-        <label for="color">Cor principal:</label>
-        <input type="color" id="color" value="#111111" />
+        <label>Cores do QR Code:</label>
+        <div class="color-inputs">
+          <div class="color-input-group">
+            <label for="color">Cor principal:</label>
+            <input type="color" id="color" value="#111111" />
+          </div>
+          <div class="color-input-group">
+            <label for="bg-color">Cor de fundo:</label>
+            <input type="color" id="bg-color" value="#ffffff" />
+          </div>
+        </div>
+
+        <label for="dot-type">Tipo de QR Code:</label>
+        <select id="dot-type">
+          <option value="square">Quadrado</option>
+          <option value="rounded">Arredondado</option>
+          <option value="dots">Pontos</option>
+          <option value="classy">Clássico</option>
+          <option value="classy-rounded">Clássico Arredondado</option>
+          <option value="extra-rounded">Extra Arredondado</option>
+        </select>
 
         <label for="logo">Logo no centro (opcional):</label>
         <input type="file" id="logo" accept="image/*" />
+        <div class="checkbox-option">
+          <input type="checkbox" id="color-svg" checked />
+          <label for="color-svg">Colorir SVG com a cor principal</label>
+        </div>
       </form>
 
-      <div id="qrcode" class="qrcode-preview"></div>
+      <!-- Área de visualização do QR Code -->
+      <div class="qrcode-preview">
+        <div id="qrcode"></div>
+      </div>
+
+      <div class="size-buttons">
+        <button id="size-512" class="size-btn">512px</button>
+        <button id="size-1024" class="size-btn">1024px</button>
+        <button id="size-2560" class="size-btn">2560px</button>
+      </div>
 
       <div class="buttons">
         <button id="download-png" class="btn">Baixar PNG</button>
         <button id="download-svg" class="btn">Baixar SVG</button>
+        <button id="copy-svg" class="btn">Copiar SVG</button>
       </div>
     </div>
   </body>
 </html>
+
+
+
+
+
+
+
