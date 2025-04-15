@@ -246,11 +246,63 @@ document.addEventListener("DOMContentLoaded", () => {
         if (qrCode._options.image && currentLogoFile && originalSvgContent) {
           // Se o logo for SVG, incorporar diretamente o código SVG
           if (currentLogoFile.type === "image/svg+xml") {
-            // Remover a tag de imagem existente e substituir pelo conteúdo SVG do logo
-            svgString = svgString.replace(/<image[^>]*\/>/, originalSvgContent);
+            // Extrair informações da imagem existente para posicionamento
+            const imageMatch = svgString.match(/<image[^>]*>/);
+            if (imageMatch) {
+              const imageTag = imageMatch[0];
+              const xMatch = imageTag.match(/x="([^"]*)"/);
+              const yMatch = imageTag.match(/y="([^"]*)"/);
+              const widthMatch = imageTag.match(/width="([^"]*)"/);
+              const heightMatch = imageTag.match(/height="([^"]*)"/);
 
-            // Ajustar posicionamento do SVG incorporado se necessário
-            // Isso pode exigir ajustes dependendo da estrutura do SVG gerado
+              // Extrair valores de posição e tamanho
+              const x = xMatch ? xMatch[1] : "0";
+              const y = yMatch ? yMatch[1] : "0";
+              const width = widthMatch ? widthMatch[1] : "0";
+              const height = heightMatch ? heightMatch[1] : "0";
+
+              // Criar um parser de DOM para manipular o SVG do logo
+              const parser = new DOMParser();
+              const logoSvgDoc = parser.parseFromString(
+                originalSvgContent,
+                "image/svg+xml"
+              );
+
+              // Obter o elemento SVG raiz do logo
+              const logoSvgRoot = logoSvgDoc.querySelector("svg");
+
+              // Aplicar a cor principal se o checkbox estiver marcado
+              if (getElement("color-svg") && getElement("color-svg").checked) {
+                const mainColor = getElement("color")?.value || "#111111";
+                const elements = logoSvgDoc.querySelectorAll(
+                  "path, circle, rect, ellipse, line, polyline, polygon"
+                );
+
+                elements.forEach((el) => {
+                  el.removeAttribute("fill");
+                  el.removeAttribute("stroke");
+                  el.setAttribute("fill", mainColor);
+                });
+              }
+
+              // Extrair o conteúdo interno do SVG do logo (sem a tag svg externa)
+              const logoContent = logoSvgRoot.innerHTML;
+
+              // Criar um grupo SVG para o logo com posicionamento e escala corretos
+              const logoGroup = `<g transform="translate(${x}, ${y})" width="${width}" height="${height}">
+                <g transform="scale(${
+                  parseFloat(width) /
+                  parseFloat(
+                    logoSvgRoot.getAttribute("viewBox").split(" ")[2] || 100
+                  )
+                })">
+                  ${logoContent}
+                </g>
+              </g>`;
+
+              // Remover a tag de imagem existente e substituir pelo grupo SVG do logo
+              svgString = svgString.replace(/<image[^>]*\/>/, logoGroup);
+            }
 
             // Finalizar o download com o SVG modificado
             downloadSvg(svgString);
@@ -280,8 +332,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Função auxiliar para download do SVG
     function downloadSvg(svgContent) {
-      // Mostrar o tamanho do arquivo
+      // Criar blob do SVG modificado
       const svgBlob = new Blob([svgContent], { type: "image/svg+xml" });
+
+      // Mostrar o tamanho do arquivo
       const fileSizeKB = (svgBlob.size / 1024).toFixed(2);
       const fileSizeMB = (svgBlob.size / (1024 * 1024)).toFixed(2);
 
