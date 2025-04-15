@@ -2,8 +2,6 @@
 
 Um gerador de QR Code moderno e personalizável com recursos avançados de estilização e exportação.
 
-![QR Code Generator Preview](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
-
 ## ✨ Recursos
 
 - 🎨 **Personalização completa**: Cores, bordas, logos e muito mais
