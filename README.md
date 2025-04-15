@@ -1,4 +1,4 @@
-# 🔄 QR Code Generator
+# 🔄 Gerador de QR Codes
 
 Um gerador de QR Code moderno e personalizável com recursos avançados de estilização e exportação.
 
