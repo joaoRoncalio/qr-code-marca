@@ -39,7 +39,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/starwind
           </div>
 
           <div class="form-group">
-            <Label>Cores do QR Code:</Label>
+            <Label for="color-input">Cores do QR Code:</Label>
             <div class="color-inputs">
               <div class="color-input-group">
                 <Label for="color">Cor principal:</Label>
@@ -108,7 +108,14 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/starwind
           <Button id="copy-svg" variant="ghost">Copiar SVG</Button>
         </div>
       </CardContent>
+      <footer class="footer">
+        <p>
+          <span class="footer-text">Bugiganga feita por</span> 
+          <a href="https://montefiorestudio.com" target="_blank" rel="noopener noreferrer" class="footer-link">Montefiore Studio</a>
+        </p>
+      </footer>
     </Card>
+
 
     <script>
       document.addEventListener('DOMContentLoaded', () => {
