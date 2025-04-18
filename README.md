@@ -2,6 +2,8 @@
 
 Um gerador de QR Code moderno e personalizável com recursos avançados de estilização e exportação.
 
+![QR Code Generator](/public/qrcode-marca-ogimage.webp)
+
 ## ✨ Recursos
 
 - 🎨 **Personalização completa**: Cores, bordas, logos e muito mais
